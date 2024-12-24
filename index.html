@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Inside Frame</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        #frame-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        #frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #user-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #444;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="frame-container">
+        <img id="user-image" src="" alt="Uploaded Image">
+        <img id="frame" src="frame.png" alt="Frame">
+    </div>
+    <button id="upload-image-button">Upload Image</button>
+    <input type="file" id="upload-image" accept="image/*">
+    <button id="download-image-button">Download Image</button>
+
+    <script>
+        const uploadImageButton = document.getElementById('upload-image-button');
+        const uploadImageInput = document.getElementById('upload-image');
+        const userImage = document.getElementById('user-image');
+        const downloadImageButton = document.getElementById('download-image-button');
+        const frameContainer = document.getElementById('frame-container');
+        const frame = document.getElementById('frame');
+
+        uploadImageButton.addEventListener('click', () => {
+            uploadImageInput.click();
+        });
+
+        uploadImageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        // Crop the image to the largest square
+                        const size = Math.min(img.width, img.height);
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        canvas.width = size;
+                        canvas.height = size;
+                        ctx.drawImage(
+                            img,
+                            (img.width - size) / 2, // Crop from the center
+                            (img.height - size) / 2,
+                            size,
+                            size,
+                            canvas.width * 0.23, // Leave 10% margin on all sides
+                            canvas.height * 0.23,
+                            canvas.width * 0.54, // Resize to 80% of canvas width
+                            canvas.height * 0.54 // Resize to 80% of canvas height
+                        );
+
+
+
+
+                        userImage.src = canvas.toDataURL();
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        downloadImageButton.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // Set canvas dimensions to match frame container
+            canvas.width = 1024;
+            canvas.height = 1024;
+
+            // Draw user image
+            context.drawImage(userImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw frame
+            context.drawImage(frame, 0, 0, canvas.width, canvas.height);
+
+            // Download the composed image
+            const link = document.createElement('a');
+            link.download = 'framed-image.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    </script>
+</body>
+
+</html>
