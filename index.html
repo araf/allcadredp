@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পরীক্ষা ছাড়া উপসচিব নয়</title>
+    <title> আন্তঃক্যাডার বৈষম্য নিরসন চাই</title>
     <style>
         body {
             margin: 0;
@@ -74,6 +74,7 @@
     <input type="file" id="upload-image" accept="image/*">
     <button id="download-image-button">ছবি ডাউনলোড করুন</button>
 
+
     <script>
         const uploadImageButton = document.getElementById('upload-image-button');
         const uploadImageInput = document.getElementById('upload-image');
@@ -94,7 +95,6 @@
                     const img = new Image();
                     img.src = e.target.result;
                     img.onload = () => {
-                        // Crop the image to the largest square
                         const size = Math.min(img.width, img.height);
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
@@ -103,14 +103,14 @@
                         canvas.height = size;
                         ctx.drawImage(
                             img,
-                            (img.width - size) / 2, // Crop from the center
+                            (img.width - size) / 2, 
                             (img.height - size) / 2,
                             size,
                             size,
-                            canvas.width * 0.23, // Leave 10% margin on all sides
+                            canvas.width * 0.23, 
                             canvas.height * 0.23,
-                            canvas.width * 0.54, // Resize to 80% of canvas width
-                            canvas.height * 0.54 // Resize to 80% of canvas height
+                            canvas.width * 0.54, 
+                            canvas.height * 0.54 
                         );
 
 
@@ -126,24 +126,22 @@
         downloadImageButton.addEventListener('click', () => {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-
-            // Set canvas dimensions to match frame container
-            canvas.width = 1024;
-            canvas.height = 1024;
-
-            // Draw user image
-            context.drawImage(userImage, 0, 0, canvas.width, canvas.height);
-
-            // Draw frame
-            context.drawImage(frame, 0, 0, canvas.width, canvas.height);
-
-            // Download the composed image
+            const margin = 5;
+            canvas.width = 1000;
+            canvas.height = 1000;
+            context.drawImage(userImage,
+                margin,
+                margin,
+                canvas.width - 2* margin,
+                canvas.height - 2* margin);
+            context.drawImage(frame, margin, margin, canvas.width - 2* margin, canvas.height - 2* margin);
             const link = document.createElement('a');
-            link.download = 'framed-image.png';
+            link.download = 'dpframe' + Date.now() + '.png';
             link.href = canvas.toDataURL();
             link.click();
         });
     </script>
+
 </body>
 
 </html>
