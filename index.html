@@ -70,6 +70,7 @@
 
         code {
             color: crimson;
+            padding: 5%;
         }
     </style>
 </head>
@@ -149,7 +150,7 @@
 
         downloadImageButton.addEventListener('click', () => {
             if (isWebView())
-                document.getElementById('note').innerHTML = `ছবি ডাউনলোড করতে উপরের থ্রি-ডট মেনু (<b> ⋮ </b>) থেকে 
+                document.getElementById('note').innerHTML = `ছবি ডাউনলোড করতে উপরের থ্রি-ডট মেনু (<b> … </b>) থেকে 
         <b> Open With External Browser / Google Chrome </b> অপশনটি সিলেক্ট করুন।`
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
