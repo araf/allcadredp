@@ -73,9 +73,48 @@
     <button id="upload-image-button">ছবি আপলোড করুন</button>
     <input type="file" id="upload-image" accept="image/*">
     <button id="download-image-button">ছবি ডাউনলোড করুন</button>
+    <br>
+    <br>
 
+    <div>
+        <code id="note"></code>
+    </div>
 
     <script>
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            let browserName;
+
+            if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
+                browserName = "Google Chrome";
+            } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+                browserName = "Apple Safari";
+            } else if (userAgent.includes("Firefox")) {
+                browserName = "Mozilla Firefox";
+            } else if (userAgent.includes("Edg")) {
+                browserName = "Microsoft Edge";
+            } else if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
+                browserName = "Opera";
+            } else if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
+                browserName = "Internet Explorer";
+            } else {
+                browserName = "Unknown";
+            }
+
+            return browserName;
+        }
+
+        function isWebView() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Checks for common WebView identifiers
+    return /FBAN|FBAV|Instagram|Line/i.test(userAgent) || 
+           (userAgent.includes("wv") && userAgent.includes("Chrome")) || 
+           /Twitter/i.test(userAgent);
+}
+
+
+        document.getElementById('note').innerHTML = isWebView()
         const uploadImageButton = document.getElementById('upload-image-button');
         const uploadImageInput = document.getElementById('upload-image');
         const userImage = document.getElementById('user-image');
@@ -103,14 +142,14 @@
                         canvas.height = size;
                         ctx.drawImage(
                             img,
-                            (img.width - size) / 2, 
+                            (img.width - size) / 2,
                             (img.height - size) / 2,
                             size,
                             size,
-                            canvas.width * 0.23, 
+                            canvas.width * 0.23,
                             canvas.height * 0.23,
-                            canvas.width * 0.54, 
-                            canvas.height * 0.54 
+                            canvas.width * 0.54,
+                            canvas.height * 0.54
                         );
 
 
@@ -126,21 +165,22 @@
         downloadImageButton.addEventListener('click', () => {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            const margin = 8;
+            const margin = 9;
             canvas.width = 1000;
             canvas.height = 1000;
             context.drawImage(userImage,
                 margin,
                 margin,
-                canvas.width - 2* margin,
-                canvas.height - 2* margin);
-            context.drawImage(frame, margin, margin, canvas.width - 2* margin, canvas.height - 2* margin);
+                canvas.width - 2 * margin,
+                canvas.height - 2 * margin);
+            context.drawImage(frame, margin, margin, canvas.width - 2 * margin, canvas.height - 2 * margin);
             const link = document.createElement('a');
             link.download = 'dpframe' + Date.now() + '.png';
             link.href = canvas.toDataURL();
             link.click();
         });
     </script>
+
 
 </body>
 
