@@ -15,6 +15,11 @@
             height: 100vh;
             flex-direction: column;
             font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        b {
+            color: black
         }
 
         #frame-container {
@@ -62,6 +67,10 @@
         input[type="file"] {
             display: none;
         }
+
+        code {
+            color: crimson;
+        }
     </style>
 </head>
 
@@ -81,40 +90,16 @@
     </div>
 
     <script>
-        function detectBrowser() {
-            const userAgent = navigator.userAgent;
-            let browserName;
-
-            if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
-                browserName = "Google Chrome";
-            } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
-                browserName = "Apple Safari";
-            } else if (userAgent.includes("Firefox")) {
-                browserName = "Mozilla Firefox";
-            } else if (userAgent.includes("Edg")) {
-                browserName = "Microsoft Edge";
-            } else if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
-                browserName = "Opera";
-            } else if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
-                browserName = "Internet Explorer";
-            } else {
-                browserName = "Unknown";
-            }
-
-            return browserName;
-        }
 
         function isWebView() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    // Checks for common WebView identifiers
-    return /FBAN|FBAV|Instagram|Line/i.test(userAgent) || 
-           (userAgent.includes("wv") && userAgent.includes("Chrome")) || 
-           /Twitter/i.test(userAgent);
-}
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return /FBAN|FBAV|Instagram|Line/i.test(userAgent) ||
+                (userAgent.includes("wv") && userAgent.includes("Chrome")) ||
+                /Twitter/i.test(userAgent);
+        }
 
 
-        document.getElementById('note').innerHTML = isWebView()
+
         const uploadImageButton = document.getElementById('upload-image-button');
         const uploadImageInput = document.getElementById('upload-image');
         const userImage = document.getElementById('user-image');
@@ -163,6 +148,9 @@
         });
 
         downloadImageButton.addEventListener('click', () => {
+            if (isWebView())
+                document.getElementById('note').innerHTML = `ছবি ডাউনলোড করতে উপরের থ্রি-ডট মেনু (<b> ⋮ </b>) থেকে 
+        <b> Open With External Browser / Google Chrome </b> অপশনটি সিলেক্ট করুন।`
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             const margin = 9;
